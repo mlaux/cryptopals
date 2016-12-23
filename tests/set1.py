@@ -35,3 +35,9 @@ class Set1Test(unittest.TestCase):
             expected_result = f.read().encode('utf-8')
         actual_result = cryptopals.set1.break_repeating_key_xor('input/challenge6.txt')
         self.assertEqual(expected_result, actual_result)
+
+    def test_decrypt_aes_ecb(self):
+        with open('output/challenge7.txt') as f:
+            expected_result = f.read().encode('utf-8')
+        actual_result = cryptopals.set1.decrypt_aes_ecb('input/challenge7.txt', b'YELLOW SUBMARINE')
+        self.assertEqual(expected_result, actual_result)

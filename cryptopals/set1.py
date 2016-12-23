@@ -2,6 +2,11 @@ import base64
 import binascii
 import itertools
 
+from cryptography.hazmat.primitives.ciphers import Cipher
+from cryptography.hazmat.primitives.ciphers.algorithms import AES
+from cryptography.hazmat.primitives.ciphers.modes import ECB
+from cryptography.hazmat.backends import default_backend
+
 from math import sqrt
 
 
@@ -115,3 +120,11 @@ def break_repeating_key_xor(file_name):
 
     val = b''.join(bytes(n) for n in zip(*decrypted_blocks))
     return bytes(val)
+
+
+def decrypt_aes_ecb(file_name, key):
+    with open(file_name) as file:
+        contents = base64.b64decode(file.read())
+    cipher = Cipher(AES(key), ECB(), backend=default_backend())
+    decryptor = cipher.decryptor()
+    return decryptor.update(contents) + decryptor.finalize()
