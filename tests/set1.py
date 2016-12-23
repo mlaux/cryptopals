@@ -18,7 +18,7 @@ class Set1Test(unittest.TestCase):
     def test_break_single_byte_xor(self):
         inp = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
         expected = b'Cooking MC\'s like a pound of bacon'
-        result, _ = cryptopals.set1.break_single_byte_xor(inp)
+        result, _, _ = cryptopals.set1.break_single_byte_xor(inp)
         self.assertEqual(expected, result)
 
     def test_detect_single_byte_xor(self):
@@ -31,4 +31,7 @@ class Set1Test(unittest.TestCase):
         cryptopals.set1.repeating_key_xor(inp, b'ICE')
 
     def test_break_repeating_key_xor(self):
-        cryptopals.set1.break_repeating_key_xor('input/challenge6.txt')
+        with open('output/challenge6.txt') as f:
+            expected_result = f.read().encode('utf-8')
+        actual_result = cryptopals.set1.break_repeating_key_xor('input/challenge6.txt')
+        self.assertEqual(expected_result, actual_result)
