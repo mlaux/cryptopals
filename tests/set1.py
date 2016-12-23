@@ -41,3 +41,13 @@ class Set1Test(unittest.TestCase):
             expected_result = f.read().encode('utf-8')
         actual_result = cryptopals.set1.decrypt_aes_ecb('input/challenge7.txt', b'YELLOW SUBMARINE')
         self.assertEqual(expected_result, actual_result)
+
+    def test_detect_aes_ecb(self):
+        expected = b'\xd8\x80a\x97@\xa8\xa1\x9bx@\xa8\xa3\x1c\x81\n=\x08d\x9a\xf7\r\xc0oO\xd5\xd2\xd6\x9ctL\xd2\x83' \
+                   b'\xe2\xdd\x05/kd\x1d\xbf\x9d\x11\xb04\x85B\xbbW\x08d\x9a\xf7\r\xc0oO\xd5\xd2\xd6\x9ctL\xd2\x83' \
+                   b'\x94u\xc9\xdf\xdb\xc1\xd4e\x97\x94\x9d\x9c~\x82\xbfZ\x08d\x9a\xf7\r\xc0oO\xd5\xd2\xd6\x9ctL\xd2' \
+                   b'\x83\x97\xa9>\xab\x8dj\xec\xd5fH\x91Tx\x9ak\x03\x08d\x9a\xf7\r\xc0oO\xd5\xd2\xd6\x9ctL\xd2\x83' \
+                   b'\xd4\x03\x18\x0c\x98\xc8\xf6\xdb\x1f*?\x9c@@\xde\xb0\xabQ\xb2\x993\xf2\xc1#\xc5\x83\x86\xb0o' \
+                   b'\xba\x18j'
+        result = cryptopals.set1.detect_aes_ecb('input/challenge8.txt')
+        self.assertEqual(expected, result)

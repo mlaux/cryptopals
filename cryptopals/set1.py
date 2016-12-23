@@ -87,6 +87,10 @@ def repeating_key_xor(a, key):
     return binascii.hexlify(result)
 
 
+def edit_distance(a, b):
+    return sum((bin(x ^ y).count('1') for (x, y) in zip(a, b)))
+
+
 def count_same_chars(a, b):
     count = 0
     for x, y in zip(a, b):
@@ -125,6 +129,25 @@ def break_repeating_key_xor(file_name):
 def decrypt_aes_ecb(file_name, key):
     with open(file_name) as file:
         contents = base64.b64decode(file.read())
+    return _decrypt_aes_ecb(contents, key)
+
+
+def _decrypt_aes_ecb(b, key):
     cipher = Cipher(AES(key), ECB(), backend=default_backend())
     decryptor = cipher.decryptor()
-    return decryptor.update(contents) + decryptor.finalize()
+    return decryptor.update(b) + decryptor.finalize()
+
+
+def detect_aes_ecb(file_name):
+    aes_ecb_line = None
+    for line in open(file_name):
+        line = line[:-1]
+        data = bytes.fromhex(line)
+        blocks = sorted([data[k:k+16] for k in range(0, len(data), 16)])
+        seen = set()
+        for b in blocks:
+            if b in seen:
+                aes_ecb_line = data
+                break
+            seen.add(b)
+    return aes_ecb_line
