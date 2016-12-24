@@ -1,4 +1,6 @@
+import base64
 import unittest
+import binascii
 import cryptopals.set1
 
 
@@ -10,9 +12,9 @@ class Set1Test(unittest.TestCase):
         self.assertEqual(result, cryptopals.set1.hex_to_b64(test_hex))
 
     def test_fixed_xor(self):
-        a = '1c0111001f010100061a024b53535009181c'
-        b = '686974207468652062756c6c277320657965'
-        c = cryptopals.set1.fixed_xor(a, b)
+        a = bytes.fromhex('1c0111001f010100061a024b53535009181c')
+        b = bytes.fromhex('686974207468652062756c6c277320657965')
+        c = binascii.hexlify(cryptopals.set1.fixed_xor(a, b))
         self.assertEqual(b'746865206b696420646f6e277420706c6179', c)
 
     def test_break_single_byte_xor(self):
@@ -26,9 +28,11 @@ class Set1Test(unittest.TestCase):
         self.assertEqual(b'Now that the party is jumping\n', result)
 
     def test_repeating_key_xor(self):
-        inp = 'Burning \'em, if you ain\'t quick and nimble\n' \
-              'I go crazy when I hear a cymbal'
-        cryptopals.set1.repeating_key_xor(inp, b'ICE')
+        inp = b'Burning \'em, if you ain\'t quick and nimble\n' \
+              b'I go crazy when I hear a cymbal'
+        result = b'0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652' \
+                 b'a3124333a653e2b2027630c692b20283165286326302e27282f'
+        self.assertEqual(result, binascii.hexlify(cryptopals.set1.repeating_key_xor(inp, b'ICE')))
 
     def test_break_repeating_key_xor(self):
         with open('output/challenge6.txt') as f:
@@ -39,7 +43,9 @@ class Set1Test(unittest.TestCase):
     def test_decrypt_aes_ecb(self):
         with open('output/challenge7.txt') as f:
             expected_result = f.read().encode('utf-8')
-        actual_result = cryptopals.set1.decrypt_aes_ecb('input/challenge7.txt', b'YELLOW SUBMARINE')
+        with open('input/challenge7.txt') as f:
+            test_input = base64.b64decode(f.read())
+        actual_result = cryptopals.set1.decrypt_aes_ecb(test_input, b'YELLOW SUBMARINE')
         self.assertEqual(expected_result, actual_result)
 
     def test_detect_aes_ecb(self):
