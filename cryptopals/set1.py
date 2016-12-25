@@ -13,7 +13,7 @@ def hex_to_b64(hex_str):
 
 
 def fixed_xor(a, b):
-    return bytearray(x ^ y for (x, y) in zip(a, b))
+    return bytes(x ^ y for (x, y) in zip(a, b))
 
 
 def break_single_byte_xor(a):
@@ -120,7 +120,7 @@ def detect_aes_ecb(file_name):
     for line in open(file_name):
         line = line[:-1]
         data = bytes.fromhex(line)
-        blocks = sorted([data[k:k + 16] for k in range(0, len(data), 16)])
+        blocks = [data[k:k + 16] for k in range(0, len(data), 16)]
         seen = set()
         for b in blocks:
             if b in seen:
